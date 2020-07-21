@@ -23,6 +23,12 @@ public class Event {
 	}
 
 	/**
+	 * zeruje statyczną zmienną number, w celu dodawania zdarzeń od zerowego miejsca
+	 */
+	public static void zeroNumber() {
+		number = 0;
+	}
+	/**
 	 * Ustawia nr wyjścia LK, którym steruje dane zdarzenie
 	 * @param out wyjście
 	 */
@@ -53,6 +59,7 @@ public class Event {
 			}
 		}
 		httpRequest.postFrame(request);
+		Event.zeroNumber();
 	}
 
 	/**
@@ -64,6 +71,7 @@ public class Event {
 	 * @throws IOException
 	 */
 	public void uploadEvent() throws IOException {
+		//TODO połączenie zapytań http, zawiesza się LK
 		String request = "/inpa.cgi?event=";
 		request += Integer.toString(number);
 		request += "*11*1*";
@@ -86,6 +94,5 @@ public class Event {
 		Event.httpRequest.postFrame(request);
 		
 		number++;
-		
 	}
 }

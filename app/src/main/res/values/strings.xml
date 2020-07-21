@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">LanKontroller</string>
+    <string name="app_name">Grzałka CWU Chmieleccy</string>
+    <string name="unknown">unknown</string>
+    <string name="on">włączony</string>
+    <string name="off">wyłączony</string>
 </resources>

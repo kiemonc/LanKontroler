@@ -15,7 +15,7 @@ public class HttpRequest {
 	public HttpRequest(String ipAdress) { 
 		this.ipAdress = ipAdress;
 	}
-
+	final private int timeout = 15000;
 	/**
 	 * Pobiera od LK odpowiedź na dane zapytanie
 	 * @param question zapytanie z pomienięciem adrazy IP
@@ -42,6 +42,7 @@ public class HttpRequest {
 	public InputStream postFrame(String question) throws IOException {
 		URL url = new URL("http://"+ipAdress+question);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setConnectTimeout(timeout);
 		conn.setRequestMethod("GET");
 	    return conn.getInputStream();
 	}
