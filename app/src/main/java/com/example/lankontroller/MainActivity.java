@@ -3,11 +3,9 @@ package com.example.lankontroller;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -99,8 +97,10 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         if(state[i]) {
                                             stateText.setText(getString(R.string.on));
+                                            stateText.setBackgroundColor(Color.GREEN);
                                         } else {
                                             stateText.setText(getString(R.string.off));
+                                            stateText.setBackgroundColor(Color.RED);
                                         }
                                     }
                                     i++;
@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                                     buttonOff.setBackgroundResource(android.R.drawable.btn_default);
                                 }
 
+
                             }
                         });
                         Thread.sleep(refreshTime);
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            lk.shutOffHeating();
+                            lk.turnOffHeating();
                         } catch (IOException e) {
 
                             e.printStackTrace();

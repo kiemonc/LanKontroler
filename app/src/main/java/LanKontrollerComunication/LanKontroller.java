@@ -34,7 +34,7 @@ public class LanKontroller {
 	 * Wyłącza wszystkie zdarzenia oraz wszystkie wyjścia LK
 	 * @throws IOException
 	 */
-	public void shutOffHeating() throws IOException {
+	public void turnOffHeating() throws IOException {
 		Event.removeEvents();
 		httpRequest.postFrame("/outs.cgi?out1=0&out2=0&out3=0");
 	}
@@ -93,6 +93,9 @@ public class LanKontroller {
 		for(Event event : events) {
 			event.uploadEvent();
 		}
+
+		//Włacza zdarzenia, bo po dodaniu są one wyłączone. Wszystkie razem ponieważ mniej obciążany jest LK3
+		Event.turnOnEvents();
 		
 	}
 
