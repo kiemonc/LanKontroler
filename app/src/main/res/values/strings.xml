@@ -3,4 +3,18 @@
     <string name="unknown">unknown</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
+    <string name="turn_on">Włącz</string>
+    <string name="turn_off">Wyłącz</string>
+    <string name="target_temperature">Zadana temperatura</string>
+    <string name="relay1">Przekaźnik 1:</string>
+    <string name="relay2">Przekaźnik 2:</string>
+    <string name="relay3">Przekaźnik 3:</string>
+    <string name="turned_on">włączony</string>
+    <string name="turned_off">wyłączony</string>
+    <string name="temperature">Temperatura</string>
+    <string name="celsjusz_deg">°C</string>
+    <string name="not_cennected">Brak połączenia z Lan Kontrolerem 3</string>
+    <string name="information">Informacja</string>
+    <string name="bad_format">Wprowadzona temperatura jest poza zakresem</string>
+    <string name="exit_app">Naciśnij klawisz wstecz jeszcze raz, aby wyjść z aplikacji</string>
 </resources>

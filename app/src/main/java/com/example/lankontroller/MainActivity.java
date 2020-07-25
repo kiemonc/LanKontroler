@@ -1,9 +1,12 @@
 package com.example.lankontroller;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +17,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import LanKontrollerComunication.LanKontroller;
 
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private String unknown;
     private final int refreshTime = 10000;
     private boolean connected;
+    private int backButtonCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
 
         unknown = getString(R.string.unknown);
 
+        backButtonCount = 0;
+
         connected = false;
+
+
 
         //wyłączenie rotacji ekranu
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -71,11 +80,21 @@ public class MainActivity extends AppCompatActivity {
                         final int targetTemperature = targetTemperatureTemp;
                         final boolean heatingState = heatingStateTemp;
                         runOnUiThread(new Runnable() {
+                            @RequiresApi(api = Build.VERSION_CODES.M)
                             @Override
                             public void run() {
                                 //połączenie
                                 if(connected == false) {
-                                    runOnUiThread(() -> Toast.makeText(MainActivity.this, "Brak połączenia z LK", Toast.LENGTH_SHORT).show());
+                                    //alert na szarym polu
+                                    //runOnUiThread(() -> Toast.makeText(MainActivity.this, "Brak połączenia z LK", Toast.LENGTH_SHORT).show());
+
+                                    //wyświetla tekst z informacją
+                                    TextView notConnected = (TextView) findViewById(R.id.connectionState);
+                                    notConnected.setVisibility(View.VISIBLE);
+                                } else {
+                                    //Ukrywa tekst z informacją
+                                    TextView connected = (TextView) findViewById(R.id.connectionState);
+                                    connected.setVisibility(View.INVISIBLE);
                                 }
                                 //temperatura
                                 TextView temperature = (TextView) findViewById(R.id.temperatureValue);
@@ -97,10 +116,10 @@ public class MainActivity extends AppCompatActivity {
                                     } else {
                                         if(state[i]) {
                                             stateText.setText(getString(R.string.on));
-                                            stateText.setBackgroundColor(Color.GREEN);
+                                            stateText.setBackgroundColor(getColor(R.color.on));
                                         } else {
                                             stateText.setText(getString(R.string.off));
-                                            stateText.setBackgroundColor(Color.RED);
+                                            stateText.setBackgroundColor(getColor(R.color.off));
                                         }
                                     }
                                     i++;
@@ -116,11 +135,11 @@ public class MainActivity extends AppCompatActivity {
                                 Button buttonOff = (Button) findViewById(R.id.buttonOff);
                                 if(connected) {
                                     if (heatingState) {
-                                        buttonOn.setBackgroundColor(Color.GREEN);
+                                        buttonOn.setBackgroundColor(getColor(R.color.on));
                                         buttonOff.setBackgroundResource(android.R.drawable.btn_default);
                                     } else {
                                         buttonOn.setBackgroundResource(android.R.drawable.btn_default);
-                                        buttonOff.setBackgroundColor(Color.RED);
+                                        buttonOff.setBackgroundColor(getColor(R.color.off));
                                     }
                                 } else {
                                     buttonOn.setBackgroundResource(android.R.drawable.btn_default);
@@ -182,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                         } else {
-                            UserDialog exampleDialog = new UserDialog("Informacja", "Wporawdzona temperatura jest poza zakresem");
+                            UserDialog exampleDialog = new UserDialog(getString(R.string.information), getString(R.string.bad_format));
                             exampleDialog.show(getSupportFragmentManager(), "poza zakresem");
                         }
                     }
@@ -196,9 +215,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+
         //wyłączenie focusu na edytowalnym tekscie po kliknieciu przycisku wstecz
         EditText temperatureTargetText = (EditText) findViewById(R.id.editTextNumber);
-        temperatureTargetText.clearFocus();
+
+        if(temperatureTargetText.hasFocus() == false) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else {
+            temperatureTargetText.clearFocus();
+        }
+
+
 
 
     }

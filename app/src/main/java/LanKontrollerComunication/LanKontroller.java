@@ -1,7 +1,6 @@
 package LanKontrollerComunication;
 
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,8 +14,16 @@ import java.util.regex.Pattern;
 public class LanKontroller {
 	private HttpRequest httpRequest;
 	private Termometer termometer;
+
+	/**
+	 * Różnica w stopniach pomiędzy kolejnymi złączeniami faz
+	 */
 	private int temperatureSteps;
-	private double histeresis;
+
+	/**
+	 * Histereza działania pojedyńczej fazy
+	 */
+	private double hysteresis;
 
 	/**
 	 *
@@ -27,7 +34,7 @@ public class LanKontroller {
 		this.termometer = new Termometer(httpRequest);
 		Event.setHttpRequest(httpRequest);
 		temperatureSteps = 2;
-		histeresis = 0.5;
+		hysteresis = 0.5;
 	}
 
 	/**
@@ -57,9 +64,9 @@ public class LanKontroller {
 	public void turnOnHeating(int temperature) throws IOException {
 		Event.zeroNumber();
 		List<Event> events = new ArrayList<>();
-		events.add(new Event(temperature,histeresis));
-		events.add(new Event(temperature-temperatureSteps,histeresis));
-		events.add(new Event(temperature-temperatureSteps*2,histeresis));
+		events.add(new Event(temperature, hysteresis));
+		events.add(new Event(temperature-temperatureSteps, hysteresis));
+		events.add(new Event(temperature-temperatureSteps*2, hysteresis));
 		
 		
 		Random random = new Random();
