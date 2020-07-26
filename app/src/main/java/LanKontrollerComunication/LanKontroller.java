@@ -29,12 +29,12 @@ public class LanKontroller {
 	 *
 	 * @param ipAdress adres IP z kropkami
 	 */
-	public LanKontroller(String ipAdress) {
+	public LanKontroller(String ipAdress,int temperatureSteps, double hysteresis) {
 		this.httpRequest = new HttpRequest(ipAdress);
 		this.termometer = new Termometer(httpRequest);
 		Event.setHttpRequest(httpRequest);
-		temperatureSteps = 2;
-		hysteresis = 0.5;
+		this.temperatureSteps = temperatureSteps;
+		this.hysteresis = hysteresis;
 	}
 
 	/**
@@ -174,4 +174,6 @@ public class LanKontroller {
 		}
 		return temperature;
 	}
+
+
 }

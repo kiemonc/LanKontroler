@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:key="ipAdress"
+        android:title="@string/ip_adress"
+        android:defaultValue="192.168.1.100" />
+    <EditTextPreference
+        android:key="hysteresis"
+        android:title="@string/hysteresis"
+        android:defaultValue="0.2"/>
+    <EditTextPreference
+        android:key="difference"
+        android:title="@string/difference_between_steps"
+        android:defaultValue="2"/>
+
+</PreferenceScreen>

@@ -1,13 +1,19 @@
 package com.example.lankontroller;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.media.audiofx.Equalizer;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,10 +35,12 @@ public class MainActivity extends AppCompatActivity {
     private final int refreshTime = 10000;
     private boolean connected;
     private int backButtonCount;
+    private ApplicationConfig config;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        lk = new LanKontroller("192.168.1.100");
+        config = new ApplicationConfig("192.168.1.100",2,0.2);
+        lk = new LanKontroller(config.ipAdress, config.temperatureSteps, config.hysteresis);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -84,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 //połączenie
-                                if(connected == false) {
+                                if(!connected) {
                                     //alert na szarym polu
                                     //runOnUiThread(() -> Toast.makeText(MainActivity.this, "Brak połączenia z LK", Toast.LENGTH_SHORT).show());
 
@@ -126,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 //zadana temperatura
                                 EditText targetTemperatureText = (EditText) findViewById(R.id.editTextNumber);
-                                if(targetTemperatureText.hasFocus() == false) {
+                                if(!targetTemperatureText.hasFocus()) {
                                     targetTemperatureText.setText(Integer.toString(targetTemperature));
                                 }
 
@@ -227,12 +235,31 @@ public class MainActivity extends AppCompatActivity {
         } else {
             temperatureTargetText.clearFocus();
         }
+    }
 
-
-
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.settings,menu);
+        return true;
     }
 
 
+    /**
+     * Obsługa przycisku ustawień. Otwiera okno ustwień po kliknięciu w przycisk
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+         switch (item.getItemId()) {
+             case R.id.settingsItem:
+                 //SettingsActivity settingsActivity = new SettingsActivity(config);
+                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                 return true;
+             default:
+                 return super.onOptionsItemSelected(item);
+         }
+    }
 }
 

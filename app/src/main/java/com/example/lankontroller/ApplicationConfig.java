@@ -2,6 +2,13 @@ package com.example.lankontroller;
 
 public class ApplicationConfig {
 
+    public ApplicationConfig(String ipAdress, int temperatureSteps, double hysteresis) {
+        this.hysteresis = hysteresis;
+        this.ipAdress = ipAdress;
+        this.temperatureSteps = temperatureSteps;
+
+    }
+
     public String ipAdress;
 
     /**
@@ -12,7 +19,7 @@ public class ApplicationConfig {
     /**
      * Histereza działania pojedyńczej fazy
      */
-    public int hysteresis;
+    public double hysteresis;
 
 
     /**
