@@ -2,12 +2,10 @@ package com.example.lankontroller;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 
 public class MySettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -33,6 +31,7 @@ public class MySettingsFragment extends PreferenceFragmentCompat implements Shar
         ipAdress = (EditTextPreference) findPreference(getString(R.string.ip_adress_key));
         hysteresis = (EditTextPreference) findPreference(getString(R.string.hysteresis_key));
         difference  = (EditTextPreference) findPreference(getString(R.string.temperature_steps_key));
+
         setValues();
         setSummaries();
 
@@ -61,17 +60,30 @@ public class MySettingsFragment extends PreferenceFragmentCompat implements Shar
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference pref = findPreference(key);
-        if (pref instanceof EditTextPreference) {
-            EditTextPreference listPref = (EditTextPreference) pref;
-            listPref.setSummary(listPref.getText());
-            if (getString(R.string.ip_adress_key) == key) {
-                updateIpAdress();
-            } else if (getString(R.string.hysteresis_key) == key) {
-                updateHysteresis();
-            } else if (getString(R.string.temperature_steps_key) == key) {
-                updateDifference();
+
+        String buff;
+
+            if (pref instanceof EditTextPreference) {
+                EditTextPreference listPref = (EditTextPreference) pref;
+                //zapamiętanie wartości przed zmianą, by potem w przypaku błędnej wartości móc ją wpisać jako warość
+                buff = (String) listPref.getSummary();
+
+                try {
+                    if (getString(R.string.ip_adress_key) == key) {
+                        updateIpAdress();
+                    } else if (getString(R.string.hysteresis_key) == key) {
+                        updateHysteresis();
+                    } else if (getString(R.string.temperature_steps_key) == key) {
+                        updateDifference();
+                    }
+                    listPref.setSummary(listPref.getText());
+                } catch(NumberFormatException e) {
+                    listPref.setText(buff);
+                    UserDialog exampleDialog = new UserDialog(getString(R.string.information), getString(R.string.bad_format_number));
+                    exampleDialog.show(getChildFragmentManager(),"Zły format");
+                }
             }
-        }
+
     }
 
 
@@ -96,10 +108,20 @@ public class MySettingsFragment extends PreferenceFragmentCompat implements Shar
     }
 
     private void updateHysteresis() {
-        config.hysteresis = Double.parseDouble(hysteresis.getText());
+        double number = Double.parseDouble(hysteresis.getText());
+        if(number < 0) {
+            throw new NumberFormatException();
+        } else {
+            config.hysteresis = number;
+        }
     }
 
     private void updateDifference() {
-        config.temperatureSteps = Double.parseDouble(difference.getText());
+        double number = Double.parseDouble(difference.getText());
+        if(number < 0) {
+            throw new NumberFormatException();
+        } else {
+            config.temperatureSteps = number;
+        }
     }
 }

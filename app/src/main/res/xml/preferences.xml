@@ -5,14 +5,17 @@
     <EditTextPreference
         android:key="@string/ip_adress_key"
         android:title="@string/ip_adress"
-        android:defaultValue="@string/unknown" />
+        android:defaultValue="@string/unknown"
+        />
     <EditTextPreference
         android:key="@string/hysteresis_key"
         android:title="@string/hysteresis"
-        android:defaultValue="@string/unknown"/>
+        android:defaultValue="@string/unknown"
+        />
     <EditTextPreference
         android:key="@string/temperature_steps_key"
         android:title="@string/difference_between_steps"
-        android:defaultValue="@string/unknown"/>
+        android:defaultValue="@string/unknown"
+        />
 
 </PreferenceScreen>
