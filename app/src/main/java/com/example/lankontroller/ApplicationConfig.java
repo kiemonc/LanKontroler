@@ -21,7 +21,7 @@ public class ApplicationConfig implements Serializable {
     private final String FILE_NAME = "config.txt";
 
 
-    public ApplicationConfig(String ipAdress, int temperatureSteps, double hysteresis) {
+    public ApplicationConfig(String ipAdress, double temperatureSteps, double hysteresis) {
         this.hysteresis = hysteresis;
         this.ipAdress = ipAdress;
         this.temperatureSteps = temperatureSteps;
@@ -32,7 +32,7 @@ public class ApplicationConfig implements Serializable {
     /**
      * Różnica w stopniach pomiędzy kolejnymi złączeniami faz
      */
-    public int temperatureSteps;
+    public double temperatureSteps;
 
     /**
      * Histereza działania pojedyńczej fazy
@@ -108,7 +108,7 @@ public class ApplicationConfig implements Serializable {
             patt = Pattern.compile("(?<=\\<diff\\>)(.*?)(?=\\<\\/diff\\>)");
             matcher = patt.matcher(data);
             if(matcher.find()) {
-                temperatureSteps = Integer.parseInt(matcher.group());
+                temperatureSteps = Double.parseDouble(matcher.group());
             }
 
         }

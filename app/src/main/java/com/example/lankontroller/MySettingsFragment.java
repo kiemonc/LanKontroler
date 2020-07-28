@@ -100,6 +100,6 @@ public class MySettingsFragment extends PreferenceFragmentCompat implements Shar
     }
 
     private void updateDifference() {
-        config.temperatureSteps = Integer.parseInt(difference.getText());
+        config.temperatureSteps = Double.parseDouble(difference.getText());
     }
 }

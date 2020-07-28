@@ -18,7 +18,7 @@ public class LanKontroller {
 	/**
 	 * Różnica w stopniach pomiędzy kolejnymi złączeniami faz
 	 */
-	private int temperatureSteps;
+	private double temperatureSteps;
 
 	/**
 	 * Histereza działania pojedyńczej fazy
@@ -29,7 +29,7 @@ public class LanKontroller {
 	 *
 	 * @param ipAdress adres IP z kropkami
 	 */
-	public LanKontroller(String ipAdress,int temperatureSteps, double hysteresis) {
+	public LanKontroller(String ipAdress,double temperatureSteps, double hysteresis) {
 		this.httpRequest = new HttpRequest(ipAdress);
 		this.termometer = new Termometer(httpRequest);
 		Event.setHttpRequest(httpRequest);
@@ -61,7 +61,7 @@ public class LanKontroller {
 	 * param temperature zadana temperatura
 	 * @throws IOException
 	 */
-	public void turnOnHeating(int temperature) throws IOException {
+	public void turnOnHeating(double temperature) throws IOException {
 		Event.zeroNumber();
 		List<Event> events = new ArrayList<>();
 		events.add(new Event(temperature, hysteresis));
@@ -164,13 +164,13 @@ public class LanKontroller {
 	 * @return zadana temperatura
 	 * @throws IOException
 	 */
-	public int getTargetTemperature() throws IOException {
+	public double getTargetTemperature() throws IOException {
 		String stateString = httpRequest.getResponse("/xml/eve2.xml");
 		Pattern patt = Pattern.compile("(?<=\\<ev0\\>\\d\\*\\d\\*\\d\\d\\*\\d\\*)(\\d{1,})");
 		Matcher matcher = patt.matcher(stateString);
-		int temperature = -1;
+		double temperature = -1;
 		if(matcher.find()) {
-			temperature = Integer.parseInt(matcher.group())/100;
+			temperature = Double.parseDouble(matcher.group())/100.0;
 		}
 		return temperature;
 	}

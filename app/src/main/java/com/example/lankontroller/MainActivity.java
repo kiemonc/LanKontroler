@@ -41,10 +41,11 @@ public class MainActivity extends AppCompatActivity {
     private int backButtonCount;
     private ApplicationConfig config;
     private final static int SAVE_SETTINGS_CODE = 1;
+    Thread refreshing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        config = new ApplicationConfig("192.168.1.100", 5, 0.2);
+        config = new ApplicationConfig("192.168.1.100", 5.0, 0.2);
         config.readConfigFromDisk(getApplicationContext());
 
         lk = new LanKontroller(config.ipAdress, config.temperatureSteps, config.hysteresis);
@@ -64,17 +65,18 @@ public class MainActivity extends AppCompatActivity {
 
 
         //zapytania http można robić tylko w oddielnym wątku, a aktualizować tekst można aktualizować tylko w wątku głównym
-        final Thread refreshing = new Thread() {
+        refreshing = new Thread() {
 
             @Override
             public void run() {
                 try {
+
                     while (!isInterrupted()) {
 
                         //sprawdzanie temperatury i stanu przekaźników i stanu grzania
                         String currentTemperatureTemp;
                         boolean[] stateTemp;
-                        int targetTemperatureTemp;
+                        double targetTemperatureTemp;
                         boolean heatingStateTemp;
                         try {
                             currentTemperatureTemp = Double.toString(lk.getTemperature());
@@ -92,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         final String currentTemperature = currentTemperatureTemp;
                         final boolean [] state = stateTemp;
-                        final int targetTemperature = targetTemperatureTemp;
+                        final double targetTemperature = targetTemperatureTemp;
                         final boolean heatingState = heatingStateTemp;
                         runOnUiThread(new Runnable() {
                             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -142,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                                 //zadana temperatura
                                 EditText targetTemperatureText = (EditText) findViewById(R.id.editTextNumber);
                                 if(!targetTemperatureText.hasFocus()) {
-                                    targetTemperatureText.setText(Integer.toString(targetTemperature));
+                                    targetTemperatureText.setText(Double.toString(targetTemperature));
                                 }
 
                                 //przyciski
@@ -203,9 +205,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         EditText temperatureField= (EditText) findViewById(R.id.editTextNumber);
-                        int temperature = 0;
+                        double temperature = 0;
                         try {
-                            temperature = Integer.parseInt(temperatureField.getText().toString());
+                            temperature = Double.parseDouble(temperatureField.getText().toString());
                         } catch(NumberFormatException e) {
 
                         }
@@ -276,6 +278,9 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == SAVE_SETTINGS_CODE) {
             config = (ApplicationConfig) data.getExtras().getSerializable("config");
             config.saveConfig(getApplicationContext());
+
+            //załadowanie nowych ustawień do Lan Kontrolera
+            lk = new LanKontroller(config.ipAdress, config.temperatureSteps, config.hysteresis);
         }
     }
 

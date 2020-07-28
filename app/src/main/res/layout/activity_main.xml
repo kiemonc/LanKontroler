@@ -159,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:ems="3"
                 android:gravity="center"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:selectAllOnFocus="true"
                 tools:layout_editor_absoluteX="154dp"
                 tools:layout_editor_absoluteY="148dp"
