@@ -3,16 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
-        android:key="ipAdress"
+        android:key="@string/ip_adress_key"
         android:title="@string/ip_adress"
-        android:defaultValue="192.168.1.100" />
+        android:defaultValue="@string/unknown" />
     <EditTextPreference
-        android:key="hysteresis"
+        android:key="@string/hysteresis_key"
         android:title="@string/hysteresis"
-        android:defaultValue="0.2"/>
+        android:defaultValue="@string/unknown"/>
     <EditTextPreference
-        android:key="difference"
+        android:key="@string/temperature_steps_key"
         android:title="@string/difference_between_steps"
-        android:defaultValue="2"/>
+        android:defaultValue="@string/unknown"/>
 
 </PreferenceScreen>

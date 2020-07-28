@@ -4,12 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.media.audiofx.Equalizer;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -36,10 +40,13 @@ public class MainActivity extends AppCompatActivity {
     private boolean connected;
     private int backButtonCount;
     private ApplicationConfig config;
+    private final static int SAVE_SETTINGS_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        config = new ApplicationConfig("192.168.1.100",2,0.2);
+        config = new ApplicationConfig("192.168.1.100", 5, 0.2);
+        config.readConfigFromDisk(getApplicationContext());
+
         lk = new LanKontroller(config.ipAdress, config.temperatureSteps, config.hysteresis);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -254,12 +261,23 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
          switch (item.getItemId()) {
              case R.id.settingsItem:
-                 //SettingsActivity settingsActivity = new SettingsActivity(config);
-                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                 Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+                 settingsIntent.putExtra("config", (Serializable) config);
+                 startActivityForResult(settingsIntent,1);
                  return true;
              default:
                  return super.onOptionsItemSelected(item);
          }
     }
+
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SAVE_SETTINGS_CODE) {
+            config = (ApplicationConfig) data.getExtras().getSerializable("config");
+            config.saveConfig(getApplicationContext());
+        }
+    }
+
 }
 

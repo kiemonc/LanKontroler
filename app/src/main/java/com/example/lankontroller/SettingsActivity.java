@@ -1,6 +1,8 @@
 package com.example.lankontroller;
 
 import android.app.ActionBar;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -10,18 +12,16 @@ import androidx.preference.PreferenceFragmentCompat;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    ApplicationConfig config;
+    private ApplicationConfig config;
 
-    /*
-    public SettingsActivity(ApplicationConfig config) {
-        super();
-        this.config = config;
-    }
-
-     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        //Pobiera konfiguracje z MainActivity
+        Intent thisIntent = getIntent();
+        config = (ApplicationConfig) thisIntent.getSerializableExtra("config");
 
         //włącza przycisk cofania
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -30,23 +30,42 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.settings_activity);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.settings, new MySettingsFragment())
+                .replace(R.id.settings, new MySettingsFragment(config))
                 .commit();
     }
 
-    public static class SettingsFragment extends PreferenceFragmentCompat {
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey);
-        }
+
+    @Override
+    public void finish() {
+        mySetResult();
+        super.finish();
     }
 
+    /**
+     * Ustawia resultat okna ustwień.
+     * Przekazuje referencje do objektu ustawień
+     */
+    private void mySetResult() {
+        int resultCode = 1;
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("config", config);
+        setResult(resultCode, resultIntent);
+    }
+
+
+    /**
+     * Kliknięcie przycisku
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
+        //Klikniecie przycisku powrotu na górze
         if (id==android.R.id.home) {
-            finish();
+            mySetResult();
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
