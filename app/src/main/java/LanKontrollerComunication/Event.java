@@ -82,9 +82,13 @@ public class Event {
 		request += Integer.toString((int) (value*100));
 		request += "*";
 		request += Integer.toString((int) (histeresis*100));
-		request += "*0*";
+
+		//operator AND między zdarzeniami: temperatura poniżej zadanaej oraz termometr w stanie dobrym
+		request += "*1*";
 		request += Integer.toString(out*2+1);
-		request += "*0*0*0*0";
+
+		//warunek aby termometr był w dobrym stanie
+		request += "*64*0*1*100";
 		Event.httpRequest.postFrame(request);
 
 		/*
