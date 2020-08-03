@@ -23,12 +23,19 @@
     <string name="hysteresis">Histereza</string>
     <string name="difference_between_steps">Różnica pomiędzy stopniami grzania</string>
     <string name="ip_adress">Adres IP</string>
-
+    <string name="send_email">Wyślij maila</string>
+    <string name="remove_archive">Usuń archiwum</string>
+    <string name="email_adress">Adres email</string>
+    <string name="sending_failed">Błąd wysyłania maila</string>
+    <string name="sending_succesfull">Wysyłanie powiodło się</string>
+    <string name="email_subject">Raport</string>
+    <string name="email_body">Wiadomość wygenerowana automatycznie przez aplikację do obsługi grzałki CWU u Chmieleckich.\nProsimy na nią nie odpowiadać.</string>
 
     <!-- Keys -->
     <string name="ip_adress_key">ipAdress</string>
     <string name="hysteresis_key">hysteresis</string>
     <string name="temperature_steps_key">temperatureSteps</string>
+    <string name="email_adress_key">emailAdress</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

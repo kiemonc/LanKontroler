@@ -11,15 +11,22 @@ public class Event {
 	private int out;
 	private static HttpRequest httpRequest;
 	private static int number = 0;
+	private boolean onSchedule;
+
+	//najwyższa temperatura zadana
+	public static final int FIRST_HEATING_STEP_EVE_NUM = LanKontroller.FIRST_HEATING_STEP_EVE_NUM;
+	public static final int SECOND_HEATING_STEP_EVE_NUM = LanKontroller.SECOND_HEATING_STEP_EVE_NUM;
+	public static final int THIRD_HEATING_STEP_EVE_NUM = LanKontroller.THIRD_HEATING_STEP_EVE_NUM;
 	
-	public Event(int out, double value, double histeresis) {
+	public Event(int out, double value, double histeresis, boolean onSchedule) {
 		this.out = out;
 		this.histeresis = histeresis;
 		this.value = value;
+		this.onSchedule = onSchedule;
 	}
 	
-	public Event(double value, double histeresis) {
-		this(0,value,histeresis);
+	public Event(double value, double histeresis, boolean onSchedule) {
+		this(0,value,histeresis,onSchedule);
 	}
 
 	/**
@@ -77,7 +84,17 @@ public class Event {
 	public void uploadEvent() throws IOException {
 		//TODO połączenie zapytań http, zawiesza się lk
 		String request = "/inpa.cgi?event=";
-		request += Integer.toString(number);
+		switch(number) {
+			case 0 :
+				request += Integer.toString(FIRST_HEATING_STEP_EVE_NUM);
+				break;
+			case 1 :
+				request += Integer.toString(SECOND_HEATING_STEP_EVE_NUM);
+				break;
+			case 2 :
+				request += Integer.toString(THIRD_HEATING_STEP_EVE_NUM);
+				break;
+		}
 		request += "*11*1*";
 		request += Integer.toString((int) (value*100));
 		request += "*";
@@ -87,8 +104,13 @@ public class Event {
 		request += "*1*";
 		request += Integer.toString(out*2+1);
 
-		//warunek aby termometr był w dobrym stanie
-		request += "*64*0*1*100";
+		//warunek aby termometr był w dobrym stanie oraz jeżeli jest w harmonogramie to ma brać pod uwagę zdarzenie uwzględniające harmonogram
+		if(onSchedule) {
+			request += "*65";
+		} else {
+			request += "*64";
+		}
+		request += "*0*1*100";
 		Event.httpRequest.postFrame(request);
 
 		/*
@@ -112,7 +134,7 @@ public class Event {
 	 * ecentper=nr_zdarzenia*1 - permanetne
 	 */
 	public static void turnOnEvents() throws IOException {
-		String request = "/inpa.cgi?eventon=0*1&eventon=1*1&eventon=2*1&eventper=0*1&eventper=1*1&eventper=2*1";
+		String request = "/inpa.cgi?eventon="+FIRST_HEATING_STEP_EVE_NUM+"*1&eventon="+SECOND_HEATING_STEP_EVE_NUM+"*1&eventon="+THIRD_HEATING_STEP_EVE_NUM+"*1&eventper=v"+FIRST_HEATING_STEP_EVE_NUM+"*1&eventper="+SECOND_HEATING_STEP_EVE_NUM+"*1&eventper="+THIRD_HEATING_STEP_EVE_NUM+"*1";
 		Event.httpRequest.postFrame(request);
 	}
 

@@ -6,4 +6,5 @@
     <color name="on">#64DD17</color>
     <color name="off">#DD2C00</color>
     <color name="white">#FFFFFF</color>
+    <color name="unknown">#000000</color>
 </resources>

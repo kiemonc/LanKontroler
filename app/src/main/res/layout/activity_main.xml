@@ -205,8 +205,16 @@
                 android:background="@android:drawable/btn_default"
                 android:text="@string/turn_on" />
 
+
+
         </TableRow>
     </TableLayout>
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/connectionState"
@@ -215,8 +223,27 @@
         android:gravity="center"
         android:padding="10dp"
         android:background="@color/off"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:textColor="@color/white"
         android:text="@string/not_cennected" />
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
+            <Button
+                android:layout_width="match_parent"
+                android:id="@+id/emailButton"
+                android:text="@string/send_email"/>
+            <Button
+                android:layout_width="match_parent"
+                android:id="@+id/removeArchive"
+                android:text="@string/remove_archive"/>
+        </TableRow>
+    </TableLayout>
 
 </LinearLayout>

@@ -13,8 +13,13 @@
         android:defaultValue="@string/unknown"
         />
     <EditTextPreference
-        android:key="@string/temperature_steps_key"
-        android:title="@string/difference_between_steps"
+    android:key="@string/temperature_steps_key"
+    android:title="@string/difference_between_steps"
+    android:defaultValue="@string/unknown"
+    />
+    <EditTextPreference
+        android:key="@string/email_adress_key"
+        android:title="@string/email_adress"
         android:defaultValue="@string/unknown"
         />
 

@@ -16,15 +16,20 @@ import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ * Przechowuje informacje o zapisanych ustwieniach aplikacji
+ */
 public class ApplicationConfig implements Serializable {
 
     private final String FILE_NAME = "config.txt";
 
 
-    public ApplicationConfig(String ipAdress, double temperatureSteps, double hysteresis) {
+    public ApplicationConfig(String ipAdress, double temperatureSteps, double hysteresis, String emailAdress) {
         this.hysteresis = hysteresis;
         this.ipAdress = ipAdress;
         this.temperatureSteps = temperatureSteps;
+        this.emailAdress = emailAdress;
     }
 
     public String ipAdress;
@@ -38,6 +43,11 @@ public class ApplicationConfig implements Serializable {
      * Histereza działania pojedyńczej fazy
      */
     public double hysteresis;
+
+    /**
+     * Adres email na który ma być wysyłane archiwum
+     */
+    public String emailAdress;
 
 
     /**
@@ -58,6 +68,9 @@ public class ApplicationConfig implements Serializable {
             data += "<diff>";
             data += temperatureSteps;
             data += "</diff>";
+            data += "<email>";
+            data += emailAdress;
+            data += "</email>";
             outputStreamWriter.write(data);
             outputStreamWriter.close();
         }
@@ -111,6 +124,12 @@ public class ApplicationConfig implements Serializable {
                 temperatureSteps = Double.parseDouble(matcher.group());
             }
 
+            //adres eamil
+            patt = Pattern.compile("(?<=\\<email\\>)(.*?)(?=\\<\\/email\\>)");
+            matcher = patt.matcher(data);
+            if(matcher.find()) {
+                emailAdress = matcher.group();
+            }
         }
         catch (FileNotFoundException e) {
             Log.e("login activity", "File not found: " + e.toString());

@@ -12,8 +12,18 @@ import java.util.regex.Pattern;
  */
 
 public class LanKontroller {
+	private static final int SCHED_EVE_NUM = 4;
+	private static final int TERMOMETER_GOOD_STATE_EVE_NUM = 3;
+
+	//najwyższa temperatura zadana
+	public static final int FIRST_HEATING_STEP_EVE_NUM = 0;
+	public static final int SECOND_HEATING_STEP_EVE_NUM = 1;
+	public static final int THIRD_HEATING_STEP_EVE_NUM = 2;
+
+
 	private HttpRequest httpRequest;
 	private Termometer termometer;
+
 
 	/**
 	 * Różnica w stopniach pomiędzy kolejnymi złączeniami faz
@@ -35,6 +45,8 @@ public class LanKontroller {
 		Event.setHttpRequest(httpRequest);
 		this.temperatureSteps = temperatureSteps;
 		this.hysteresis = hysteresis;
+
+
 	}
 
 	/**
@@ -61,20 +73,20 @@ public class LanKontroller {
 	 * param temperature zadana temperatura
 	 * @throws IOException
 	 */
-	public void turnOnHeating(double temperature) throws IOException {
+	public void turnOnHeating(double temperature, boolean onSchedule) throws IOException {
 		Event.zeroNumber();
 		List<Event> events = new ArrayList<>();
-		events.add(new Event(temperature, hysteresis));
-		events.add(new Event(temperature-temperatureSteps, hysteresis));
-		events.add(new Event(temperature-temperatureSteps*2, hysteresis));
-		
-		
+		events.add(new Event(temperature, hysteresis, onSchedule));
+		events.add(new Event(temperature-temperatureSteps, hysteresis, onSchedule));
+		events.add(new Event(temperature-temperatureSteps*2, hysteresis, onSchedule));
+
+
 		Random random = new Random();
-		
+
 		int [] number = new int[3];
 		number[0] = random.nextInt(3);
 
-		
+
 		if(random.nextBoolean()) {
 			number[1] = 0;
 			number[2] = 1;
@@ -82,7 +94,7 @@ public class LanKontroller {
 			number[1] = 1;
 			number[2] = 0;
 		}
-		
+
 		if(number[0]==0) {
 			number[1]++;
 			number[2]++;
@@ -91,12 +103,12 @@ public class LanKontroller {
 		} else if(number[0]==1 && number[2]==1) {
 			number[2]++;
 		}
-		
+
 		for(int i = 0; i < 3; i++) {
 			number[i]++;
 			events.get(i).setOut(number[i]);
 		}
-		
+
 		for(Event event : events) {
 			event.uploadEvent();
 		}
@@ -166,7 +178,7 @@ public class LanKontroller {
 	 */
 	public double getTargetTemperature() throws IOException {
 		String stateString = httpRequest.getResponse("/xml/eve2.xml");
-		Pattern patt = Pattern.compile("(?<=\\<ev0\\>\\d\\*\\d\\*\\d\\d\\*\\d\\*)(\\d{1,})");
+		Pattern patt = Pattern.compile("(?<=\\<ev"+FIRST_HEATING_STEP_EVE_NUM+"\\>\\d\\*\\d\\*\\d\\d\\*\\d\\*)(\\d{1,})");
 		Matcher matcher = patt.matcher(stateString);
 		double temperature = -1;
 		if(matcher.find()) {
@@ -175,5 +187,32 @@ public class LanKontroller {
 		return temperature;
 	}
 
+	/**
+	 * Zadaje i włącza zdarzenia odpowiedzalne za sprawdzanie poprawności działania termometru oraz zdarzenia odpowiedzialnego za działanie schedulera
+	 * @throws IOException
+	 */
+	public void setGoodStatusAndSchedEvents() throws IOException {
+		//dodanie zdarzeń
+		String request = "/inpa.cgi?event="+TERMOMETER_GOOD_STATE_EVE_NUM+"*11*0*100*0*0*31*65*0*1*100&event="+SCHED_EVE_NUM+"*11*0*100*0*1*33*54*0*1*100";
+		httpRequest.postFrame(request);
+
+		//włączenie zdarzeń
+		request = "/inpa.cgi?eventon="+TERMOMETER_GOOD_STATE_EVE_NUM+"*1&eventon="+SCHED_EVE_NUM+"*1&eventper="+TERMOMETER_GOOD_STATE_EVE_NUM+"*1&eventper="+SCHED_EVE_NUM+"*1";
+		httpRequest.postFrame(request);
+	}
+
+	/**
+	 * Sprawdza czy LK ma dodane zdarzenia odpowiedzalne za sprawdzanie stanu termometru oraz schedulera
+	 * @return czy stan jest ok
+	 * @throws IOException
+	 */
+	public boolean checkStatusAndSchedEvetns() throws IOException {
+		String response = httpRequest.getResponse("/xml/eve2.xml");
+		if(response.contains("1*1*11*0*100*0*0*31*65*0*1*100*1") && response.contains("1*1*11*0*100*0*1*33*54*0*1*100*1")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 }

@@ -15,6 +15,7 @@ public class MySettingsFragment extends PreferenceFragmentCompat implements Shar
     private EditTextPreference ipAdress;
     private EditTextPreference hysteresis;
     private EditTextPreference difference;
+    private EditTextPreference email;
 
     public MySettingsFragment(ApplicationConfig config) {
         super();
@@ -31,6 +32,7 @@ public class MySettingsFragment extends PreferenceFragmentCompat implements Shar
         ipAdress = (EditTextPreference) findPreference(getString(R.string.ip_adress_key));
         hysteresis = (EditTextPreference) findPreference(getString(R.string.hysteresis_key));
         difference  = (EditTextPreference) findPreference(getString(R.string.temperature_steps_key));
+        email = (EditTextPreference) findPreference(getString(R.string.email_adress_key));
 
         setValues();
         setSummaries();
@@ -45,6 +47,7 @@ public class MySettingsFragment extends PreferenceFragmentCompat implements Shar
         ipAdress.setSummary(ipAdress.getText());
         hysteresis.setSummary(hysteresis.getText());
         difference.setSummary(difference.getText());
+        email.setSummary(email.getText());
     }
 
 
@@ -55,6 +58,7 @@ public class MySettingsFragment extends PreferenceFragmentCompat implements Shar
         ipAdress.setText(config.ipAdress);
         hysteresis.setText(Double.toString(config.hysteresis));
         difference.setText(Double.toString(config.temperatureSteps));
+        email.setText(config.emailAdress);
     }
 
     @Override
@@ -75,6 +79,8 @@ public class MySettingsFragment extends PreferenceFragmentCompat implements Shar
                         updateHysteresis();
                     } else if (getString(R.string.temperature_steps_key) == key) {
                         updateDifference();
+                    } else if (getString(R.string.email_adress_key) == key) {
+                        updateEmailAdress();
                     }
                     listPref.setSummary(listPref.getText());
                 } catch(NumberFormatException e) {
@@ -123,5 +129,10 @@ public class MySettingsFragment extends PreferenceFragmentCompat implements Shar
         } else {
             config.temperatureSteps = number;
         }
+    }
+
+    private void updateEmailAdress() {
+        config.emailAdress = email.getText();
+
     }
 }

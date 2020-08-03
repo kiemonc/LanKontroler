@@ -11,6 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 
+
+/**
+ * Okno dialogowe z ustawieniami. Konteneryzuje "fragment ustawień"
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     private ApplicationConfig config;
