@@ -7,4 +7,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="buttonOn" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="colorButtonNormal">@color/on</item>
+    </style>
+
+    <style name="buttonOff" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/white</item>
+        <item name="colorButtonNormal">@color/off</item>
+    </style>
+
 </resources>

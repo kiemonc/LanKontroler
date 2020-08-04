@@ -30,6 +30,8 @@
     <string name="sending_succesfull">Wysyłanie powiodło się</string>
     <string name="email_subject">Raport</string>
     <string name="email_body">Wiadomość wygenerowana automatycznie przez aplikację do obsługi grzałki CWU u Chmieleckich.\nProsimy na nią nie odpowiadać.</string>
+    <string name="archive_size">Rozmiar archiwum: </string>
+
 
     <!-- Keys -->
     <string name="ip_adress_key">ipAdress</string>

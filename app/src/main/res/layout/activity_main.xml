@@ -96,37 +96,43 @@
                 android:id="@+id/state0"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:background="#000000"
                 android:gravity="center_horizontal"
-                android:paddingHorizontal="10dp"
+                android:padding="10dp"
                 android:text="@string/unknown"
                 android:textAlignment="center"
-                android:layout_margin="5dp"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/state1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:background="#000000"
                 android:gravity="center_horizontal"
-                android:paddingHorizontal="10dp"
+                android:padding="10dp"
                 android:text="@string/unknown"
                 android:textAlignment="center"
-                android:layout_margin="5dp"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/state2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:background="#000000"
                 android:gravity="center_horizontal"
-                android:paddingHorizontal="10dp"
+                android:padding="10dp"
                 android:text="@string/unknown"
                 android:textAlignment="center"
-                android:layout_margin="5dp"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
         </TableRow>
     </TableLayout>
 
@@ -194,15 +200,12 @@
                 android:id="@+id/buttonOff"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:drawable/btn_default"
-                android:text="@string/turn_off"
-                tools:ignore="ButtonStyle" />
+                android:text="@string/turn_off" />
 
             <Button
                 android:id="@+id/buttonOn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:drawable/btn_default"
                 android:text="@string/turn_on" />
 
 
@@ -235,15 +238,37 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal">
+
             <Button
-                android:layout_width="match_parent"
                 android:id="@+id/emailButton"
-                android:text="@string/send_email"/>
-            <Button
                 android:layout_width="match_parent"
+                android:paddingHorizontal="10dp"
+                android:backgroundTint="@color/btn_normal"
+                android:text="@string/send_email" />
+
+            <Button
                 android:id="@+id/removeArchive"
-                android:text="@string/remove_archive"/>
+                android:layout_width="match_parent"
+                android:paddingHorizontal="10dp"
+                android:backgroundTint="@color/btn_normal"
+                android:text="@string/remove_archive" />
+        </TableRow>
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/archieSizeTextView"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/archive_size"/>
+            <TextView
+                android:id="@+id/archieSizeValue"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/unknown"/>
         </TableRow>
     </TableLayout>
+
 
 </LinearLayout>

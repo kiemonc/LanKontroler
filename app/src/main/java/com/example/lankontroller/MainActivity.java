@@ -21,6 +21,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Ref;
@@ -188,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
 
             public void onClick(View v) {
                 archive.remove();
-
+                updateArchiveSizeValue();
             }
         });
 
@@ -416,8 +419,8 @@ public class MainActivity extends AppCompatActivity {
         //przyciski
         Button buttonOn = (Button) findViewById(R.id.buttonOn);
         Button buttonOff = (Button) findViewById(R.id.buttonOff);
-        buttonOn.setBackgroundResource(android.R.drawable.btn_default);
-        buttonOff.setBackgroundResource(android.R.drawable.btn_default);
+        buttonOn.setBackgroundTintList(getColorStateList(R.color.btn_normal));
+        buttonOff.setBackgroundTintList(getColorStateList(R.color.btn_normal));
 
     }
 
@@ -468,26 +471,26 @@ public class MainActivity extends AppCompatActivity {
         Button buttonOn = (Button) findViewById(R.id.buttonOn);
         Button buttonOff = (Button) findViewById(R.id.buttonOff);
         if (heatingState) {
-            buttonOn.setBackgroundColor(getColor(R.color.on));
-            buttonOff.setBackgroundResource(android.R.drawable.btn_default);
+            buttonOn.setBackgroundTintList(getColorStateList(R.color.btn_on));
+            buttonOff.setBackgroundTintList(getColorStateList(R.color.btn_normal));
         } else {
-            buttonOn.setBackgroundResource(android.R.drawable.btn_default);
-            buttonOff.setBackgroundColor(getColor(R.color.off));
+            buttonOn.setBackgroundTintList(getColorStateList(R.color.btn_normal));
+            buttonOff.setBackgroundTintList(getColorStateList(R.color.btn_off));
         }
 
         //kółko ładowania
-        if(appHeatingState != heatingState) {
-            if(progressBar.getVisibility() != View.VISIBLE) {
-                progressBar.setVisibility(View.VISIBLE);
-            }
-        } else {
-            if(progressBar.getVisibility() != View.INVISIBLE) {
-                progressBar.setVisibility(View.INVISIBLE);
-            }
+        if(appHeatingState == heatingState && progressBar.getVisibility() != View.INVISIBLE) {
+            progressBar.setVisibility(View.INVISIBLE);
         }
+
+        //rozmiar archiwum
+        updateArchiveSizeValue();
 
     }
 
+    /**
+     * Wyświetla kółko ładowania
+     */
     private void setProgressBarVisibilityOnUI() {
         runOnUiThread(new Runnable() {
             @Override
@@ -495,6 +498,31 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    /**
+     * Aktualizuje wyświetlany rozmiar pliku archiwum
+     */
+    private void updateArchiveSizeValue() {
+        File archiveFile = new File(archive.getFullPath());
+        TextView archiveSize = (TextView) findViewById(R.id.archieSizeValue);
+        if(archiveFile.exists()) {
+            long size = archiveFile.length();
+            archiveSize.setText(" " + bytesToString(size));
+        } else {
+            archiveSize.setText(" 0 B");
+        }
+    }
+
+    private String bytesToString(long size) {
+        String value;
+        if(size<1000) {
+            return size + " B";
+        } else if(size<1000000) {
+            return size/1000.0 + " KB";
+        } else {
+            return size/1000000.0 + " MB";
+        }
     }
 
 }
