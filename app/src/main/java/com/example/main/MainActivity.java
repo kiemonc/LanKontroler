@@ -1,10 +1,13 @@
-package com.example.lankontroller;
+package com.example.main;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -21,18 +24,19 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.mail.MessagingException;
 
-import LanKontrollerComunication.LanKontroller;
+import lankontroller.LanKontroller;
+import lankontroller.Schedule;
+import scheduleActivity.ScheduleActivity;
+import settingsActivity.ApplicationConfig;
+import settingsActivity.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,15 +53,27 @@ public class MainActivity extends AppCompatActivity {
     private String currentTemperature;
     private boolean[] state;
     private double targetTemperature;
-    private boolean heatingState;
+    private int heatingState;
     private ProgressBar progressBar;
-    private boolean appHeatingState;
+    private int appHeatingState;
 
+    //layout elements
+    private Button buttonOff;
+    private Button buttonOn;
+    private Button buttonAuto;
+    private EditText targetTemperatureEditText;
+
+
+    private MainActivity mainActivity;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        mainActivity = this;
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -66,6 +82,14 @@ public class MainActivity extends AppCompatActivity {
 
         lk = new LanKontroller(config.ipAdress, config.temperatureSteps, config.hysteresis);
 
+        //layout elements
+        buttonOn = findViewById(R.id.buttonOn);
+        buttonOff = findViewById(R.id.buttonOff);
+        buttonAuto = findViewById(R.id.buttonAuto);
+        targetTemperatureEditText = findViewById(R.id.editTextNumber);
+
+
+        //pozwolanie na korzystanie z pamieci
         //ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
 
@@ -85,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         //jedno odświeżenie stanu LK3
-        new RefreshingTask().execute("");
+        new InitializingTask().execute("");
         appHeatingState = heatingState;
 
 
@@ -116,8 +140,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //potrzebne do wyświetlania kółka ładowania
-                if(appHeatingState == true) {
-                    appHeatingState = false;
+                if(appHeatingState != LanKontroller.HEATING_OFF) {
+                    appHeatingState = LanKontroller.HEATING_OFF;
                 }
 
                 Thread thread = new Thread() {
@@ -142,8 +166,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //potrzebne do wyświetlania kółka ładowania
-                if(appHeatingState == false) {
-                    appHeatingState = true;
+                if(appHeatingState != LanKontroller.HEATING_ON) {
+                    appHeatingState = LanKontroller.HEATING_ON;
                 }
 
                 Thread thread = new Thread() {
@@ -162,6 +186,63 @@ public class MainActivity extends AppCompatActivity {
                                 setProgressBarVisibilityOnUI();
                                 //ustawianie temperatury
                                 lk.turnOnHeating(temperature, false);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            UserDialog exampleDialog = new UserDialog(getString(R.string.information), getString(R.string.bad_format_temperature));
+                            exampleDialog.show(getSupportFragmentManager(), "poza zakresem");
+                        }
+                    }
+                };
+                thread.start();
+            }
+        });
+
+
+        //przycisk Auto
+        //przycisk właczenia ogrzewania
+        final Button buttonAuto = findViewById(R.id.buttonAuto);
+        buttonAuto.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                //po kolejnym kliknieciu zmiana stanu grzania
+                //potrzebne do wyświetlania kółka ładowania
+                if(appHeatingState != LanKontroller.HEATING_AUTO_OFF && appHeatingState != LanKontroller.HEATING_AUTO_ON) {
+                    appHeatingState = LanKontroller.HEATING_AUTO;
+                }
+
+
+
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        EditText temperatureField= (EditText) findViewById(R.id.editTextNumber);
+                        double temperature = 0;
+
+
+                        try {
+                            temperature = Double.parseDouble(temperatureField.getText().toString());
+
+                        } catch(NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+                        if(temperature > 20 && temperature < 70) {
+
+                            try {
+                                setProgressBarVisibilityOnUI();
+                                if(lk.getHeatingState() == LanKontroller.HEATING_AUTO_ON) {
+                                    appHeatingState = LanKontroller.HEATING_AUTO_OFF;
+                                    //wyłącza grzanie podczas działanie na harmongramie
+                                    lk.turnOnHeatingOnSchedule(false);
+                                } else if(lk.getHeatingState() == LanKontroller.HEATING_AUTO_OFF) {
+                                    appHeatingState = LanKontroller.HEATING_AUTO_ON;
+                                    //włącza grznaie
+                                    lk.turnOnHeatingOnSchedule(true);
+                                } else {
+                                    //ustawianie temperatury
+                                    lk.turnOnHeating(temperature, true);
+                                }
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -215,6 +296,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Dodawanie przycisków na toolbarze
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -236,6 +322,10 @@ public class MainActivity extends AppCompatActivity {
                  settingsIntent.putExtra("config", (Serializable) config);
                  startActivityForResult(settingsIntent,1);
                  return true;
+             case R.id.scheduleItem:
+                 Intent scheduleIntent = new Intent(MainActivity.this, ScheduleActivity.class);
+                 startActivity(scheduleIntent);
+                 return true;
              default:
                  return super.onOptionsItemSelected(item);
          }
@@ -256,12 +346,16 @@ public class MainActivity extends AppCompatActivity {
 
     private class SendingEmail extends AsyncTask<String, Integer, String> {
 
-        // Runs in UI before background thread is called
+        private ProgressDialog progressDialog;
+
+        public SendingEmail() {
+            progressDialog = new ProgressDialog(mainActivity);
+        }
+
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
-
-            // Do something like display a progress bar
+            progressDialog.setMessage(getString(R.string.sending));
+            progressDialog.show();
         }
 
         // This is run in a background thread
@@ -294,7 +388,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
             // Do things like hide the progress bar or change a TextView
         }
     }
@@ -326,9 +422,10 @@ public class MainActivity extends AppCompatActivity {
                 currentTemperature = unknown;
                 state = null;
                 targetTemperature = -1;
-                heatingState = false;
+                heatingState = LanKontroller.HEATING_UNKNOWN_STATE;
                 connected = false;
             }
+
 
 
             return "this string is passed to onPostExecute";
@@ -346,18 +443,42 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            refresh();
+        }
+    }
 
-            runOnUiThread(new Runnable() {
-                @RequiresApi(api = Build.VERSION_CODES.M)
-                @Override
-                public void run() {
-                    if(connected) {
-                        refresh();
-                    } else {
-                        setUnknownState();
-                    }
+    private class InitializingTask extends AsyncTask<String, Integer, String> {
+
+        // This is run in a background thread
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                if (!lk.checkStatusAndSchedEvetns()) {
+                    lk.setGoodStatusAndSchedEvents();
                 }
-            });
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    lk.updateTime();
+                }
+                System.out.println(lk.getTime());
+            } catch (IOException e) {
+                connected = false;
+            }
+            return "this string is passed to onPostExecute";
+        }
+
+        // This is called from background thread but runs in UI
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+            // Do things like update the progress bar
+        }
+
+        // This runs in UI when background thread finishes
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
         }
     }
 
@@ -413,14 +534,21 @@ public class MainActivity extends AppCompatActivity {
         stateTextList.add((TextView) findViewById(R.id.state2));
         for(TextView stateText : stateTextList) {
             stateText.setText(getString(R.string.unknown));
-            stateText.setBackgroundColor(getColor(R.color.unknown));
+            stateText.setBackgroundColor(getColor(R.color.black));
         }
 
         //przyciski
-        Button buttonOn = (Button) findViewById(R.id.buttonOn);
-        Button buttonOff = (Button) findViewById(R.id.buttonOff);
         buttonOn.setBackgroundTintList(getColorStateList(R.color.btn_normal));
         buttonOff.setBackgroundTintList(getColorStateList(R.color.btn_normal));
+        buttonAuto.setBackgroundTintList(getColorStateList(R.color.btn_normal));
+        buttonOn.setEnabled(false);
+        buttonOff.setEnabled(false);
+        buttonAuto.setEnabled(false);
+
+
+        //zadana temperatura
+        TextView targetTemperature = (TextView) findViewById(R.id.targetTemperature);
+        targetTemperature.setText(getString(R.string.unknown));
 
     }
 
@@ -428,8 +556,12 @@ public class MainActivity extends AppCompatActivity {
      * Odświeża stan okna
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
-    private void refresh() {
+    private void refreshLK() {
 
+        //ustawienie przycisków na aktywne
+        buttonOn.setEnabled(true);
+        buttonOff.setEnabled(true);
+        buttonAuto.setEnabled(true);
 
 
         //komunikat o połączeniu
@@ -462,29 +594,45 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //zadana temperatura
-        EditText targetTemperatureText = (EditText) findViewById(R.id.editTextNumber);
-        if(!targetTemperatureText.hasFocus()) {
-            targetTemperatureText.setText(Double.toString(targetTemperature));
-        }
+        TextView targetTemperatureText = (TextView) findViewById(R.id.targetTemperature);
+        targetTemperatureText.setText(Double.toString(targetTemperature));
+
 
         //przyciski
-        Button buttonOn = (Button) findViewById(R.id.buttonOn);
-        Button buttonOff = (Button) findViewById(R.id.buttonOff);
-        if (heatingState) {
-            buttonOn.setBackgroundTintList(getColorStateList(R.color.btn_on));
-            buttonOff.setBackgroundTintList(getColorStateList(R.color.btn_normal));
-        } else {
-            buttonOn.setBackgroundTintList(getColorStateList(R.color.btn_normal));
-            buttonOff.setBackgroundTintList(getColorStateList(R.color.btn_off));
+        switch (heatingState) {
+            case LanKontroller.HEATING_ON:
+                buttonOn.setBackgroundTintList(getColorStateList(R.color.btn_on));
+                buttonOff.setBackgroundTintList(getColorStateList(R.color.btn_normal));
+                buttonAuto.setBackgroundTintList(getColorStateList(R.color.btn_normal));
+                break;
+            case LanKontroller.HEATING_OFF:
+                buttonOn.setBackgroundTintList(getColorStateList(R.color.btn_normal));
+                buttonOff.setBackgroundTintList(getColorStateList(R.color.btn_off));
+                buttonAuto.setBackgroundTintList(getColorStateList(R.color.btn_normal));
+                break;
+            case LanKontroller.HEATING_AUTO_ON:
+                buttonOn.setBackgroundTintList(getColorStateList(R.color.btn_normal));
+                buttonOff.setBackgroundTintList(getColorStateList(R.color.btn_normal));
+                buttonAuto.setBackgroundTintList(getColorStateList(R.color.btn_on));
+                break;
+            case LanKontroller.HEATING_AUTO_OFF:
+                buttonOn.setBackgroundTintList(getColorStateList(R.color.btn_normal));
+                buttonOff.setBackgroundTintList(getColorStateList(R.color.btn_normal));
+                buttonAuto.setBackgroundTintList(getColorStateList(R.color.btn_off));
+                break;
         }
 
         //kółko ładowania
-        if(appHeatingState == heatingState && progressBar.getVisibility() != View.INVISIBLE) {
+        if((appHeatingState == heatingState || (appHeatingState == LanKontroller.HEATING_AUTO && (heatingState == LanKontroller.HEATING_AUTO_OFF || heatingState == LanKontroller.HEATING_AUTO_ON))) && progressBar.getVisibility() != View.INVISIBLE) {
             progressBar.setVisibility(View.INVISIBLE);
         }
 
-        //rozmiar archiwum
-        updateArchiveSizeValue();
+        //edit text z zadaną temperaturą, jeśli jest pusty to wpisywana jest zadan temperatura
+        String text = targetTemperatureEditText.getText().toString();
+        if(text.equals("")) {
+            targetTemperatureEditText.setText(Double.toString(targetTemperature));
+        }
+
 
     }
 
@@ -524,6 +672,24 @@ public class MainActivity extends AppCompatActivity {
             return size/1000000.0 + " MB";
         }
     }
+
+    private void refresh() {
+        runOnUiThread(new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void run() {
+                if(connected) {
+                    refreshLK();
+                } else {
+                    setUnknownState();
+                }
+
+                //rozmiar archiwum
+                updateArchiveSizeValue();
+            }
+        });
+    }
+
 
 }
 

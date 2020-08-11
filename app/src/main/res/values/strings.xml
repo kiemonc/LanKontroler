@@ -5,13 +5,14 @@
     <string name="off">OFF</string>
     <string name="turn_on">Włącz</string>
     <string name="turn_off">Wyłącz</string>
-    <string name="target_temperature">Zadana temperatura</string>
+    <string name="target_temperature">Zadana temperatura:</string>
+    <string name="set_temperature">Zadaj temperaturę:</string>
     <string name="relay1">Przekaźnik 1:</string>
     <string name="relay2">Przekaźnik 2:</string>
     <string name="relay3">Przekaźnik 3:</string>
     <string name="turned_on">włączony</string>
     <string name="turned_off">wyłączony</string>
-    <string name="temperature">Temperatura</string>
+    <string name="temperature">Temperatura:</string>
     <string name="celsjusz_deg">°C</string>
     <string name="not_cennected">Brak połączenia z Lan Kontrolerem 3</string>
     <string name="information">Informacja</string>
@@ -31,6 +32,19 @@
     <string name="email_subject">Raport</string>
     <string name="email_body">Wiadomość wygenerowana automatycznie przez aplikację do obsługi grzałki CWU u Chmieleckich.\nProsimy na nią nie odpowiadać.</string>
     <string name="archive_size">Rozmiar archiwum: </string>
+    <string name="schedule">Harmonogram</string>
+    <string name="auto">Auto</string>
+
+    <!-- Week Dayes-->
+    <string name="mon">pon</string>
+    <string name="tue">wt</string>
+    <string name="wed">śr</string>
+    <string name="thu">czw</string>
+    <string name="fri">pt</string>
+    <string name="sat">sob</string>
+    <string name="sun">ndz</string>
+
+    <string name="everyday" >Codziennie</string>
 
 
     <!-- Keys -->
@@ -54,4 +68,35 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_settings2">SettingsActivity2</string>
+    <string name="title_activity_schedule">ScheduleActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="save">Zapisz</string>
+    <string name="cancel">Anuluj</string>
+    <string name="date">Dzień:</string>
+    <string name="hour">Godzina:</string>
+    <string name="description">Opis:</string>
+    <string name="eventText">Zdarzenie:</string>
+    <string name="state">Stan:</string>
+    <string name="on_heating">Włącz grzanie</string>
+    <string name="off_heating">Wyłącz grzanie</string>
+    <string name="time">Czas:</string>
+    <string name="week">Dni tygodnia</string>
+    <string name="one_day">Jeden dzień</string>
+    <string name="typeText">Typ:</string>
+    <string name="delete">Usuń</string>
+    <string name="set">Set</string>
+    <string name="descriptionValue">Harmonogram</string>
+    <string name="pick_all_data">Wprowadź wszystkie dane.</string>
+    <string name="max_schedules">Maksymalnie możesz dodać 49 harmnogramów.</string>
+    <string name="saving_failed">Błąd zapisywania harmonogramów. Sprawdź połączenie z LanKontrollerem.</string>
+    <string name="schedules_saved">Harmonogramy zapisano.</string>
+    <string name="sending">Wysyłanie</string>
+    <string name="downloading">Pobieranie harmonogramów</string>
 </resources>

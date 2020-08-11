@@ -1,4 +1,4 @@
-package LanKontrollerComunication;
+package lankontroller;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  *
  */
 public class Termometer {
-	private LanKontrollerComunication.HttpRequest httpRequest;
+	private lankontroller.HttpRequest httpRequest;
 	
 	public Termometer(HttpRequest httpRequest) {
 		this.httpRequest = httpRequest;

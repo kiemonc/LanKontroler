@@ -1,4 +1,4 @@
-package LanKontrollerComunication;
+package lankontroller;
 
 import java.io.IOException;
 

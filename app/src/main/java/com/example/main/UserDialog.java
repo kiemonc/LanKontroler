@@ -1,4 +1,4 @@
-package com.example.lankontroller;
+package com.example.main;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;

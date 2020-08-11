@@ -1,10 +1,5 @@
-package com.example.lankontroller;
-import android.content.Context;
-import android.util.Log;
+package com.example.main;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.Properties;
 
 import javax.activation.DataHandler;

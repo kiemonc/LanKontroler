@@ -12,39 +12,11 @@
         android:id="@+id/temperature"
 
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="left"
-        tools:ignore="RtlHardcoded,UselessParent">
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="10dp"
-            android:text="@string/temperature"
-            tools:ignore="RtlSymmetry" />
-
-        <TextView
-            android:id="@+id/temperatureValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/unknown"
-            android:paddingRight="1dp"
-            android:gravity="right"
-            tools:ignore="RtlSymmetry" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/celsjusz_deg" />
-    </TableRow>
     </TableLayout>
 
 
@@ -55,7 +27,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="20dp">
 
 
         <TableRow
@@ -141,10 +114,80 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_marginLeft="10dp">
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            tools:ignore="RtlHardcoded,UselessParent">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="@string/temperature"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/temperatureValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@color/black"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:text="@string/unknown"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/celsjusz_deg" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            tools:ignore="UselessParent">
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="@string/target_temperature"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="160dp" />
+
+            <TextView
+                android:id="@+id/targetTemperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@color/black"
+                android:gravity="center_horizontal"
+                android:padding="10dp"
+                android:text="@string/unknown"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
+
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/celsjusz_deg"
+                tools:layout_editor_absoluteX="220dp"
+                tools:layout_editor_absoluteY="160dp" />
+        </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
@@ -155,20 +198,18 @@
                 android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/target_temperature"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="160dp" />
+                android:gravity="right"
+                android:text="@string/set_temperature" />
 
             <EditText
                 android:id="@+id/editTextNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="3"
                 android:gravity="center"
+                android:layout_margin="5dp"
+                android:maxEms="5"
                 android:inputType="numberDecimal"
                 android:selectAllOnFocus="true"
-                tools:layout_editor_absoluteX="154dp"
-                tools:layout_editor_absoluteY="148dp"
                 android:autofillHints=""
                 tools:ignore="LabelFor" />
 
@@ -181,6 +222,19 @@
                 tools:layout_editor_absoluteX="220dp"
                 tools:layout_editor_absoluteY="160dp" />
         </TableRow>
+
+    </TableLayout>
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
 
     </TableLayout>
 
@@ -207,6 +261,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/turn_on" />
+            <Button
+                android:id="@+id/buttonAuto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/auto" />
 
 
 

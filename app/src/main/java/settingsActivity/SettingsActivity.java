@@ -1,15 +1,14 @@
-package com.example.lankontroller;
+package settingsActivity;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceFragmentCompat;
+
+import com.example.main.R;
 
 
 /**

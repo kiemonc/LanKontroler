@@ -1,4 +1,4 @@
-package com.example.lankontroller;
+package settingsActivity;
 
 import android.content.Context;
 
