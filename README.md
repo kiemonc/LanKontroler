@@ -13,7 +13,9 @@ Aplikacja napisana na potrzeby obsługi sterownika Lan Kontroler 3.5 sterująceg
 - zadawanie temperatury
 
 ## Wygląd
-![alt text](https://github.com/kiemonc/LanKontroler/blob/master/Screenshot_20210503-135057_Grzaka%20CWU%20Chmieleccy.jpg)
+<p align="center">
+  <img src="https://github.com/kiemonc/LanKontroler/blob/master/Screenshot_20210503-135057_Grzaka%20CWU%20Chmieleccy.jpg" width="250" title="hover text">
+</p>
 
 ## Setup
 Plik instalacyjny aplikacji: /app/release/release-app.apk
