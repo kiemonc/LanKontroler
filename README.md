@@ -1,9 +1,9 @@
 # LanKontroler
 ## Opis
-Aplikacja napisana na potrzeby obsługi grzałki CWU.
+Aplikacja napisana na potrzeby obsługi sterownika Lan Kontroler 3.5 sterującego grzałką CWU.
 ## Technologie
 > Android Studio  
-> TinyControl Lan Controller 3.5  
+> TinyControl Lan Kontroler 3.5  
 > HTTP GET/POST  
 
 ## Funkcjonalność
